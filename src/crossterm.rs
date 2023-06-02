@@ -1,6 +1,6 @@
-use crate::{app::App, ui};
+use crate::{app::App, ui, global_state::State, key_handler::handle_key_event};
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode, KeyEventKind},
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -20,9 +20,10 @@ pub fn run(tick_rate: Duration, enhanced_graphics: bool) -> Result<(), Box<dyn E
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
+    let state = State::new();
 
     let app = App::new("web3xplore", enhanced_graphics);
-    let res = run_app(&mut terminal, app, tick_rate);
+    let res = run_app(&mut terminal, app, state, tick_rate);
 
     disable_raw_mode()?;
     execute!(
@@ -42,34 +43,27 @@ pub fn run(tick_rate: Duration, enhanced_graphics: bool) -> Result<(), Box<dyn E
 fn run_app<B: Backend>(
     terminal: &mut Terminal<B>,
     mut app: App,
+    mut state: State,
     tick_rate: Duration,
 ) -> io::Result<()> {
     let mut last_tick = Instant::now();
+    crate::screens::blocks::app::update_blocks_list(&mut state);
     loop {
-        terminal.draw(|f| ui::draw(f, &mut app))?;
+        terminal.draw(|f| ui::draw(f, &mut app, &mut state))?;
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
             .unwrap_or_else(|| Duration::from_secs(0));
         if crossterm::event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
-                if key.kind == KeyEventKind::Press {
-                    match key.code {
-                        KeyCode::Char(c) => app.on_key(c),
-                        KeyCode::Left => app.on_left(),
-                        KeyCode::Up => app.on_up(),
-                        KeyCode::Right => app.on_right(),
-                        KeyCode::Down => app.on_down(),
-                        _ => {}
-                    }
-                }
+                handle_key_event(&mut state, key);
             }
         }
         if last_tick.elapsed() >= tick_rate {
             app.on_tick();
             last_tick = Instant::now();
         }
-        if app.should_quit {
+        if state.should_quit {
             return Ok(());
         }
     }

@@ -1,10 +1,13 @@
 
-mod screens;
 
 mod app;
 mod ui;
 
 mod crossterm;
+mod key_handler;
+mod screens;
+mod global_state;
+
 use crate::crossterm::run;
 
 use argh::FromArgs;

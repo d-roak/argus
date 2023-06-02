@@ -116,28 +116,6 @@ impl Iterator for SinSignal {
     }
 }
 
-pub struct TabsState<'a> {
-    pub titles: Vec<&'a str>,
-    pub index: usize,
-}
-
-impl<'a> TabsState<'a> {
-    pub fn new(titles: Vec<&'a str>) -> TabsState {
-        TabsState { titles, index: 0 }
-    }
-    pub fn next(&mut self) {
-        self.index = (self.index + 1) % self.titles.len();
-    }
-
-    pub fn previous(&mut self) {
-        if self.index > 0 {
-            self.index -= 1;
-        } else {
-            self.index = self.titles.len() - 1;
-        }
-    }
-}
-
 pub struct StatefulList<T> {
     pub state: ListState,
     pub items: Vec<T>,
@@ -149,34 +127,6 @@ impl<T> StatefulList<T> {
             state: ListState::default(),
             items,
         }
-    }
-
-    pub fn next(&mut self) {
-        let i = match self.state.selected() {
-            Some(i) => {
-                if i >= self.items.len() - 1 {
-                    0
-                } else {
-                    i + 1
-                }
-            }
-            None => 0,
-        };
-        self.state.select(Some(i));
-    }
-
-    pub fn previous(&mut self) {
-        let i = match self.state.selected() {
-            Some(i) => {
-                if i == 0 {
-                    self.items.len() - 1
-                } else {
-                    i - 1
-                }
-            }
-            None => 0,
-        };
-        self.state.select(Some(i));
     }
 }
 
@@ -224,7 +174,6 @@ pub struct Server<'a> {
 pub struct App<'a> {
     pub title: &'a str,
     pub should_quit: bool,
-    pub tabs: TabsState<'a>,
     pub show_chart: bool,
     pub progress: f64,
     pub sparkline: Signal<RandomSignal>,
@@ -247,7 +196,6 @@ impl<'a> App<'a> {
         App {
             title,
             should_quit: false,
-            tabs: TabsState::new(vec!["Tab0", "Tab1", "Tab2"]),
             show_chart: true,
             progress: 0.0,
             sparkline: Signal {
@@ -298,34 +246,6 @@ impl<'a> App<'a> {
                 },
             ],
             enhanced_graphics,
-        }
-    }
-
-    pub fn on_up(&mut self) {
-        self.tasks.previous();
-    }
-
-    pub fn on_down(&mut self) {
-        self.tasks.next();
-    }
-
-    pub fn on_right(&mut self) {
-        self.tabs.next();
-    }
-
-    pub fn on_left(&mut self) {
-        self.tabs.previous();
-    }
-
-    pub fn on_key(&mut self, c: char) {
-        match c {
-            'q' => {
-                self.should_quit = true;
-            }
-            't' => {
-                self.show_chart = !self.show_chart;
-            }
-            _ => {}
         }
     }
 
