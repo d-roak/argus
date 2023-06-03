@@ -1,4 +1,4 @@
-use crate::{app::App, ui, global_state::State, key_handler::handle_key_event};
+use crate::{app::App, ui, global_state::State, global_key_handler::handle_key_event};
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
@@ -48,6 +48,8 @@ fn run_app<B: Backend>(
 ) -> io::Result<()> {
     let mut last_tick = Instant::now();
     crate::screens::blocks::app::update_blocks_list(&mut state);
+    let block_number = state.blocks.items[state.blocks.state.selected().unwrap()].clone();
+    crate::screens::blocks::app::get_block_by_number(&mut state, &block_number);
     loop {
         terminal.draw(|f| ui::draw(f, &mut app, &mut state))?;
 

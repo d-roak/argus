@@ -1,32 +1,24 @@
-use crate::{app::App, global_state::State};
+use crate::global_state::State;
 use ratatui::{
     backend::Backend,
-    layout::{Constraint, Layout, Rect, Alignment},
+    layout::{Constraint, Direction, Layout, Rect, Alignment},
     style::{Color, Modifier, Style},
     text::{Span, Spans},
-    widgets::{Borders, Block, Paragraph},
+    widgets::{Borders, Block, Clear, Paragraph},
     Frame,
 };
 
-pub fn draw<B>(f: &mut Frame<B>, app: &mut App, state: &mut State, area: Rect)
+pub fn draw<B>(f: &mut Frame<B>, state: &mut State)
 where
     B: Backend,
 {
-    let chunks = Layout::default()
-        .constraints(
-            [
-                Constraint::Length(9),
-                Constraint::Min(8),
-                Constraint::Length(7),
-            ]
-            .as_ref(),
-        )
-        .split(area);
-
-    draw_search_box(f, app, state, chunks[0]);
+    let size = f.size();
+    let area = centered_rect(80, 7, size);
+    f.render_widget(Clear, area);
+    draw_search_box(f, state, area);
 }
 
-fn draw_search_box<B>(f: &mut Frame<B>, app: &mut App, state: &mut State, area: Rect)
+fn draw_search_box<B>(f: &mut Frame<B>, state: &mut State, area: Rect)
 where
     B: Backend,
 {
@@ -44,7 +36,7 @@ where
 
     let block = Block::default()
         .title(Span::styled(
-            "Search (press I to insert mode, press Esc to normal mode)",
+            "Search",
             Style::default()
                 .fg(Color::White)
                 .bg(Color::DarkGray)
@@ -60,4 +52,31 @@ where
         .wrap(ratatui::widgets::Wrap { trim: true });
 
     f.render_widget(input, area);
+}
+
+/// helper function to create a centered rect using up certain percentage of the available rect `r`
+fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
+    let popup_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_y) / 2),
+                Constraint::Percentage(percent_y),
+                Constraint::Percentage((100 - percent_y) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(r);
+
+    Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_x) / 2),
+                Constraint::Percentage(percent_x),
+                Constraint::Percentage((100 - percent_x) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(popup_layout[1])[1]
 }

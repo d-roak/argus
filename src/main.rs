@@ -6,9 +6,9 @@ mod app;
 mod ui;
 
 mod crossterm;
-mod key_handler;
 mod screens;
 mod global_state;
+mod global_key_handler;
 
 use crate::crossterm::run;
 

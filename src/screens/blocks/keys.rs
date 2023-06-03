@@ -1,4 +1,5 @@
 
+use clipboard_macos::Clipboard;
 use crossterm::event::{KeyCode, KeyEvent};
 use crate::{global_state::State, screens::transactions::app::get_tx_by_hash};
 
@@ -6,8 +7,8 @@ use super::app::get_block_by_number;
 
 pub fn handle_key_event(state: &mut State, key: KeyEvent) {
     let focus = state
-        .blocks_focus
-        .items[state.blocks_focus.state.selected().unwrap()].clone();
+        .focus
+        .items[state.focus.state.selected().unwrap()].clone();
     match key.code {
         KeyCode::Up | KeyCode::Char('k') => {
             if focus == "last_blocks" {
@@ -28,18 +29,31 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
             }
         }
         KeyCode::Left | KeyCode::Char('h') => {
-            state.blocks_focus.previous();
+            state.focus.previous();
         }
         KeyCode::Right | KeyCode::Char('l') => {
-            state.blocks_focus.next();
+            state.focus.next();
+        }
+        KeyCode::Char('s') => {
+            if state.search_popup {
+                state.search_popup = false;
+            } else {
+                state.search_popup = true;
+            }
         }
         KeyCode::Enter => {
             if focus == "last_blocks" {
-                state.blocks_focus.next();
+                state.focus.next();
             } else if focus == "block_info" {
-                let tx_hash = state.block_info.items[state.block_info.state.selected().unwrap()].1.clone().replace("\"", "");
-                get_tx_by_hash(state, &tx_hash);
-                state.set_current_tab("Transactions");
+                let tuple = state.block_info.items[state.block_info.state.selected().unwrap()].clone();
+                if tuple.0.trim().parse::<u32>().is_ok() {
+                    let tx_hash = tuple.1.replace("\"", "");
+                    get_tx_by_hash(state, &tx_hash);
+                    state.set_current_tab("Transactions");
+                } else {
+                    let mut clipboard = Clipboard::new().unwrap();
+                    clipboard.write(tuple.1.replace("\"", "")).unwrap();
+                }
             }
         }
         _ => {}

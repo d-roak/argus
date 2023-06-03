@@ -69,10 +69,11 @@ impl<T> StatefulList<T> {
 
 pub struct State<'a> {
     pub blocks: StatefulList<String>,
-    pub blocks_focus: StatefulList<String>,
     pub block_info: StatefulList<(String, String)>,
+    pub focus: StatefulList<String>,
     pub input_buffer: String,
     pub input_mode: InputMode,
+    pub search_popup: bool,
     pub should_quit: bool,
     pub tabs: TabsState<'a>,
     pub tabs_current: u16,
@@ -83,12 +84,13 @@ impl State<'_> {
     pub fn new() -> Self {
         Self {
             blocks: StatefulList::with_items(vec![]),
-            blocks_focus: StatefulList::with_items(vec!["last_blocks".to_string(), "block_info".to_string()]),
             block_info: StatefulList::with_items(vec![]),
+            focus: StatefulList::with_items(vec!["last_blocks".to_string(), "block_info".to_string()]),
             input_buffer: String::new(),
             input_mode: InputMode::Normal,
+            search_popup: false,
             should_quit: false,
-            tabs: TabsState::new(vec!["Blocks", "Transactions", "Search"]),
+            tabs: TabsState::new(vec!["Blocks", "Transactions"]),
             tabs_current: 0,
             tx_info: StatefulList::with_items(vec![]),
         }

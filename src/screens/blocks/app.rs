@@ -62,3 +62,33 @@ pub fn get_block_by_number(state: &mut State, block_number: &str) {
     });
     state.block_info = StatefulList::with_items(ret_vec);
 }
+
+pub fn get_block_by_hash(state: &mut State, block_hash: &str) {
+    let res = Client::new()
+        .post(std::env::var("RPC_ENDPOINT").unwrap())
+        .json(&json!({
+            "id": 1,
+            "jsonrpc": "2.0",
+            "method": "eth_getBlockByHash",
+            "params": [block_hash, true],
+        }))
+        .send()
+        .unwrap();
+
+    let block = res.json::<Value>().unwrap()["result"].clone();
+    let mut ret_vec: Vec<(String, String)> = Vec::new();
+    block.as_object().unwrap().iter().for_each(|(k, v)| {
+        if k == "transactions" {
+            let transactions = v.as_array().unwrap();
+            ret_vec.push(("transactions".to_string(), "[".to_string()));
+            transactions.iter().enumerate().for_each(|(i, t)| {
+                let tx = t.as_object().unwrap().clone();
+                ret_vec.push((format!("  {}  ", i), format!("{}", tx["hash"].to_string())));
+            });
+            ret_vec.push(("0".to_string(), "]".to_string()));
+        } else {
+            ret_vec.push((k.to_string(), v.to_string()));
+        }
+    });
+    state.block_info = StatefulList::with_items(ret_vec);
+}

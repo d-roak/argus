@@ -2,10 +2,9 @@ use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
-    symbols,
     text::{Span, Spans},
     widgets::{
-        Axis, Block, Borders, Chart, Dataset, List, ListItem, 
+        Block, Borders, List, ListItem, 
     },
     Frame,
 };

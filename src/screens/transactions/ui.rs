@@ -1,11 +1,10 @@
 use ratatui::{
     backend::Backend,
-    layout::{Constraint, Direction, Layout, Rect},
+    layout::{Constraint, Layout, Rect},
     style::{Color, Modifier, Style},
-    symbols,
     text::{Span, Spans},
     widgets::{
-        Axis, Block, Borders, Chart, Dataset, List, ListItem, 
+        Block, Borders, List, ListItem, 
     },
     Frame,
 };
@@ -31,14 +30,6 @@ fn draw_transaction<B>(f: &mut Frame<B>, state: &mut State, area: Rect)
 where
     B: Backend,
 {
-    /*
-    let constraints = vec![Constraint::Percentage(20), Constraint::Percentage(80)];
-    let chunks = Layout::default()
-        .constraints(constraints)
-        .direction(Direction::Horizontal)
-        .split(area);
-        */
-
     let tx_info: Vec<ListItem> = state
         .tx_info
         .items
@@ -46,7 +37,6 @@ where
         .map(|i| ListItem::new(vec![
             Spans::from(vec![
                 Span::raw(&i.0),
-                // tab spacer
                 Span::raw(" "),
                 Span::styled(
                     &i.1,
