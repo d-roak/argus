@@ -2,7 +2,7 @@ use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
-    text::{Span, Spans},
+    text::{Span, Line},
     widgets::{
         Block, Borders, List, ListItem, 
     },
@@ -40,7 +40,7 @@ where
         .blocks
         .items
         .iter() 
-        .map(|i| ListItem::new(vec![Spans::from(Span::raw(i))]))
+        .map(|i| ListItem::new(vec![Line::from(Span::raw(i))]))
         .collect();
     let blocks = List::new(blocks)
         .block(Block::default().borders(Borders::ALL).title("Last Blocks"))
@@ -54,10 +54,9 @@ where
         .items
         .iter() 
         .map(|i| ListItem::new(vec![
-            Spans::from(vec![
+            Line::from(vec![
                 Span::raw(&i.0),
                 // tab spacer
-                Span::raw(" "),
                 Span::styled(
                     &i.1,
                     Style::default().fg(Color::Yellow),

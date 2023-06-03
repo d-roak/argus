@@ -1,9 +1,9 @@
-use crate::{app::App, global_state::State};
+use crate::global_state::State;
 use ratatui::{
     backend::Backend,
     layout::{Constraint, Layout},
     style::{Color, Modifier, Style},
-    text::{Span, Spans},
+    text::{Span, Line},
     widgets::{
         Borders, Block, Tabs,
     },
@@ -11,7 +11,7 @@ use ratatui::{
 };
 use crate::screens;
 
-pub fn draw<B: Backend>(f: &mut Frame<B>, app: &mut App, state: &mut State) {
+pub fn draw<B: Backend>(f: &mut Frame<B>, state: &mut State) {
     let chunks = Layout::default()
         .constraints([Constraint::Length(3), Constraint::Min(0)].as_ref())
         .split(f.size());
@@ -22,7 +22,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, app: &mut App, state: &mut State) {
         .iter()
         .map(|t| {
             let (f, r) = t.split_at(1);
-            Spans::from(vec![
+            Line::from(vec![
                 Span::styled(
                     f,
                     Style::default()
@@ -34,7 +34,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, app: &mut App, state: &mut State) {
         .collect();
 
     let tabs = Tabs::new(titles)
-        .block(Block::default().borders(Borders::ALL).title(app.title))
+        .block(Block::default().borders(Borders::ALL).title(state.rpc_selected.clone()))
         .highlight_style(Style::default().fg(Color::Yellow))
         .select(state.tabs.index);
     f.render_widget(tabs, chunks[0]);
@@ -45,6 +45,9 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, app: &mut App, state: &mut State) {
     };
     if state.search_popup {
         crate::screens::search::ui::draw(f, state);
+    }
+    if state.rpc_list_popup {
+        crate::screens::list_rpcs::ui::draw(f, state);
     }
 }
 

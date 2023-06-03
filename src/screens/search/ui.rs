@@ -3,7 +3,7 @@ use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout, Rect, Alignment},
     style::{Color, Modifier, Style},
-    text::{Span, Spans},
+    text::{Span, Line},
     widgets::{Borders, Block, Clear, Paragraph},
     Frame,
 };
@@ -23,13 +23,10 @@ where
     B: Backend,
 {
     let input = vec![
-        Spans::from(vec![
+        Line::from(vec![
             Span::styled(
                 &state.input_buffer,
-                Style::default()
-                    .bg(Color::DarkGray)
-                    .fg(Color::White)
-                    .add_modifier(Modifier::BOLD),
+                Style::default().add_modifier(Modifier::BOLD),
             ),
         ]),
     ];
@@ -39,14 +36,11 @@ where
             "Search",
             Style::default()
                 .fg(Color::White)
-                .bg(Color::DarkGray)
                 .add_modifier(Modifier::BOLD),
         ))
-        .borders(Borders::ALL)
-        .border_style(Style::default().fg(Color::DarkGray));
+        .borders(Borders::ALL);
 
     let input = Paragraph::new(input)
-        .style(Style::default().fg(Color::White))
         .block(block)
         .alignment(Alignment::Left)
         .wrap(ratatui::widgets::Wrap { trim: true });

@@ -7,7 +7,11 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
     match state.input_mode {
         InputMode::Normal => match key.code {
             KeyCode::Char('\'') => {
-                // list rpc endpoints
+                if state.rpc_list_popup {
+                    state.rpc_list_popup = false;
+                } else {
+                    state.rpc_list_popup = true;
+                }
             }
             KeyCode::Char('b') => {
                 state.set_current_tab("Blocks");
@@ -24,6 +28,8 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
             _ => {
                 if state.search_popup {
                     screens::search::keys::handle_key_event(state, key);
+                } else if state.rpc_list_popup {
+                    screens::list_rpcs::keys::handle_key_event(state, key);
                 } else if state.tabs_current == 0 {
                     screens::blocks::keys::handle_key_event(state, key);
                 } else if state.tabs_current == 1 {

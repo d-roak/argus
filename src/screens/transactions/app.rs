@@ -1,6 +1,5 @@
 use serde_json::{ json, Value };
 use reqwest::blocking::Client;
-use std::env;
 
 use crate::global_state::{State, StatefulList};
 
@@ -13,7 +12,7 @@ pub struct Block {
 
 pub fn get_tx_by_hash(state: &mut State, tx_hash: &str) {
     let res = Client::new()
-        .post(env::var("RPC_ENDPOINT").unwrap())
+        .post(&state.rpc_endpoint)
         .json(&json!({
             "id": 1,
             "jsonrpc": "2.0",

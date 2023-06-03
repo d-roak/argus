@@ -42,7 +42,7 @@ impl<T> StatefulList<T> {
         let i = match self.state.selected() {
             Some(i) => {
                 if i >= self.items.len() - 1 {
-                    0
+                    i
                 } else {
                     i + 1
                 }
@@ -56,7 +56,7 @@ impl<T> StatefulList<T> {
         let i = match self.state.selected() {
             Some(i) => {
                 if i == 0 {
-                    self.items.len() - 1
+                    0
                 } else {
                     i - 1
                 }
@@ -73,6 +73,10 @@ pub struct State<'a> {
     pub focus: StatefulList<String>,
     pub input_buffer: String,
     pub input_mode: InputMode,
+    pub rpc_endpoint: String,
+    pub rpc_list: StatefulList<(String, String)>,
+    pub rpc_list_popup: bool,
+    pub rpc_selected: String,
     pub search_popup: bool,
     pub should_quit: bool,
     pub tabs: TabsState<'a>,
@@ -88,6 +92,14 @@ impl State<'_> {
             focus: StatefulList::with_items(vec!["last_blocks".to_string(), "block_info".to_string()]),
             input_buffer: String::new(),
             input_mode: InputMode::Normal,
+            rpc_endpoint: std::env::var("ETH_RPC_ENDPOINT").unwrap(),
+            rpc_list: StatefulList::with_items(vec![
+                ("ETH_RPC_ENDPOINT".to_string(), "Ethereum".to_string()),
+                ("GNOSIS_RPC_ENDPOINT".to_string(), "Gnosis Chain".to_string()),
+                ("CUSTOM_RPC_ENDPOINT".to_string(), "Custom RPC Endpoint".to_string()),
+            ]),
+            rpc_list_popup: false,
+            rpc_selected: "Ethereum".to_string(),
             search_popup: false,
             should_quit: false,
             tabs: TabsState::new(vec!["Blocks", "Transactions"]),

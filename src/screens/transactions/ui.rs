@@ -2,7 +2,7 @@ use ratatui::{
     backend::Backend,
     layout::{Constraint, Layout, Rect},
     style::{Color, Modifier, Style},
-    text::{Span, Spans},
+    text::{Span, Line},
     widgets::{
         Block, Borders, List, ListItem, 
     },
@@ -35,7 +35,7 @@ where
         .items
         .iter() 
         .map(|i| ListItem::new(vec![
-            Spans::from(vec![
+            Line::from(vec![
                 Span::raw(&i.0),
                 Span::raw(" "),
                 Span::styled(

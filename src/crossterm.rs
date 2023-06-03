@@ -51,7 +51,7 @@ fn run_app<B: Backend>(
     let block_number = state.blocks.items[state.blocks.state.selected().unwrap()].clone();
     crate::screens::blocks::app::get_block_by_number(&mut state, &block_number);
     loop {
-        terminal.draw(|f| ui::draw(f, &mut app, &mut state))?;
+        terminal.draw(|f| ui::draw(f, &mut state))?;
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
