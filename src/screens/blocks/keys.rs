@@ -105,6 +105,9 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
                         *v = encoded;
                     }
                 } else if k.trim() == "totalDifficulty" {
+                    if state.rpc_selected == "Gnosis Chain" {
+                        continue;
+                    }
                     if v.starts_with("0x") {
                         let decoded = u128::from_str_radix(v.trim_start_matches("0x"), 16).unwrap();
                         *v = decoded.to_string();
