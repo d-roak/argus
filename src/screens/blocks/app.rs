@@ -57,7 +57,10 @@ pub fn get_block_by_number(state: &mut State, block_number: &str) {
             });
             ret_vec.push(("".to_string(), "]".to_string()));
         } else {
-            ret_vec.push((format!("{:?} ", k.to_string()), v.to_string()));
+            ret_vec.push(
+                (format!("{} ", k.to_string()),
+                format!("{}", v.to_string().replace("\"", "")))
+            );
         }
     });
     state.block_info = StatefulList::with_items(ret_vec);
@@ -85,9 +88,12 @@ pub fn get_block_by_hash(state: &mut State, block_hash: &str) {
                 let tx = t.as_object().unwrap().clone();
                 ret_vec.push((format!("  {}  ", i), format!("{}", tx["hash"].to_string())));
             });
-            ret_vec.push(("0".to_string(), "]".to_string()));
+            ret_vec.push(("".to_string(), "]".to_string()));
         } else {
-            ret_vec.push((k.to_string(), v.to_string()));
+            ret_vec.push(
+                (format!("{} ", k.to_string()),
+                format!("{}", v.to_string().replace("\"", "")))
+            );
         }
     });
     state.block_info = StatefulList::with_items(ret_vec);
