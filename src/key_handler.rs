@@ -13,6 +13,9 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
             KeyCode::Char('q') => {
                 state.quit();
             }
+            KeyCode::Char('r') => {
+                crate::screens::blocks::app::update_blocks_list(state);
+            }
             KeyCode::Char('s') => {
                 state.set_current_tab("Search");
             }

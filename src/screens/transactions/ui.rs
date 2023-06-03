@@ -1,97 +1,65 @@
-use crate::app::App;
 use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     symbols,
-    text::Span,
-    widgets::canvas::{Canvas, Line, Map, MapResolution, Rectangle},
+    text::{Span, Spans},
     widgets::{
-        Borders, Block, Row, Table,
+        Axis, Block, Borders, Chart, Dataset, List, ListItem, 
     },
     Frame,
 };
+use crate::global_state::State;
 
-pub fn draw<B>(f: &mut Frame<B>, app: &mut App, area: Rect)
+pub fn draw<B>(f: &mut Frame<B>, state: &mut State, area: Rect)
 where
     B: Backend,
 {
     let chunks = Layout::default()
-        .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
+        .constraints(
+            [
+                Constraint::Min(8),
+            ]
+            .as_ref(),
+        )
+        .split(area);
+    
+    draw_transaction(f, state, chunks[0]);
+}
+
+fn draw_transaction<B>(f: &mut Frame<B>, state: &mut State, area: Rect)
+where
+    B: Backend,
+{
+    /*
+    let constraints = vec![Constraint::Percentage(20), Constraint::Percentage(80)];
+    let chunks = Layout::default()
+        .constraints(constraints)
         .direction(Direction::Horizontal)
         .split(area);
-    let up_style = Style::default().fg(Color::Green);
-    let failure_style = Style::default()
-        .fg(Color::Red)
-        .add_modifier(Modifier::RAPID_BLINK | Modifier::CROSSED_OUT);
-    let rows = app.servers.iter().map(|s| {
-        let style = if s.status == "Up" {
-            up_style
-        } else {
-            failure_style
-        };
-        Row::new(vec![s.name, s.location, s.status]).style(style)
-    });
-    let table = Table::new(rows)
-        .header(
-            Row::new(vec!["Server", "Location", "Status"])
-                .style(Style::default().fg(Color::Yellow))
-                .bottom_margin(1),
-        )
-        .block(Block::default().title("Servers").borders(Borders::ALL))
-        .widths(&[
-            Constraint::Length(15),
-            Constraint::Length(15),
-            Constraint::Length(10),
-        ]);
-    f.render_widget(table, chunks[0]);
+        */
 
-    let map = Canvas::default()
-        .block(Block::default().title("World").borders(Borders::ALL))
-        .paint(|ctx| {
-            ctx.draw(&Map {
-                color: Color::White,
-                resolution: MapResolution::High,
-            });
-            ctx.layer();
-            ctx.draw(&Rectangle {
-                x: 0.0,
-                y: 30.0,
-                width: 10.0,
-                height: 10.0,
-                color: Color::Yellow,
-            });
-            for (i, s1) in app.servers.iter().enumerate() {
-                for s2 in &app.servers[i + 1..] {
-                    ctx.draw(&Line {
-                        x1: s1.coords.1,
-                        y1: s1.coords.0,
-                        y2: s2.coords.0,
-                        x2: s2.coords.1,
-                        color: Color::Yellow,
-                    });
-                }
-            }
-            for server in &app.servers {
-                let color = if server.status == "Up" {
-                    Color::Green
-                } else {
-                    Color::Red
-                };
-                ctx.print(
-                    server.coords.1,
-                    server.coords.0,
-                    Span::styled("X", Style::default().fg(color)),
-                );
-            }
-        })
-        .marker(if app.enhanced_graphics {
-            symbols::Marker::Braille
-        } else {
-            symbols::Marker::Dot
-        })
-        .x_bounds([-180.0, 180.0])
-        .y_bounds([-90.0, 90.0]);
-    f.render_widget(map, chunks[1]);
+    let tx_info: Vec<ListItem> = state
+        .tx_info
+        .items
+        .iter() 
+        .map(|i| ListItem::new(vec![
+            Spans::from(vec![
+                Span::raw(&i.0),
+                // tab spacer
+                Span::raw(" "),
+                Span::styled(
+                    &i.1,
+                    Style::default().fg(Color::Yellow),
+                ),
+            ])
+        ]))
+        .collect();
+    let tx_info = List::new(tx_info)
+        .block(Block::default().borders(Borders::ALL).title("Transaction Information"))
+        .highlight_style(Style::default().add_modifier(Modifier::BOLD))
+        .highlight_symbol("> ");
+
+    f.render_stateful_widget(tx_info, area, &mut state.tx_info.state);
 }
 

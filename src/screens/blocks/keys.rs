@@ -1,6 +1,6 @@
 
 use crossterm::event::{KeyCode, KeyEvent};
-use crate::global_state::State;
+use crate::{global_state::State, screens::transactions::app::get_tx_by_hash};
 
 use super::app::get_block_by_number;
 
@@ -12,6 +12,10 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
         KeyCode::Up | KeyCode::Char('k') => {
             if focus == "last_blocks" {
                 state.blocks.previous();
+                let block_number = state.blocks.items[state.blocks.state.selected().unwrap()].clone();
+                get_block_by_number(state, &block_number);
+            } else if focus == "block_info" {
+                state.block_info.previous();
             }
         }
         KeyCode::Down | KeyCode::Char('j') => {
@@ -19,6 +23,8 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
                 state.blocks.next();
                 let block_number = state.blocks.items[state.blocks.state.selected().unwrap()].clone();
                 get_block_by_number(state, &block_number);
+            } else if focus == "block_info" {
+                state.block_info.next();
             }
         }
         KeyCode::Left | KeyCode::Char('h') => {
@@ -28,6 +34,13 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
             state.blocks_focus.next();
         }
         KeyCode::Enter => {
+            if focus == "last_blocks" {
+                state.blocks_focus.next();
+            } else if focus == "block_info" {
+                let tx_hash = state.block_info.items[state.block_info.state.selected().unwrap()].1.clone().replace("\"", "");
+                get_tx_by_hash(state, &tx_hash);
+                state.set_current_tab("Transactions");
+            }
         }
         _ => {}
     }

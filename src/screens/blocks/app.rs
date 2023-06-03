@@ -13,7 +13,7 @@ pub struct Block {
 
 pub fn update_blocks_list(state: &mut State) {
     let res = Client::new()
-        .post("")
+        .post(std::env::var("RPC_ENDPOINT").unwrap())
         .json(&json!({
             "id": 1,
             "jsonrpc": "2.0",
@@ -35,7 +35,7 @@ pub fn update_blocks_list(state: &mut State) {
 pub fn get_block_by_number(state: &mut State, block_number: &str) {
     let block_number = format!("0x{:x}", block_number.parse::<u64>().unwrap());
     let res = Client::new()
-        .post("")
+        .post(std::env::var("RPC_ENDPOINT").unwrap())
         .json(&json!({
             "id": 1,
             "jsonrpc": "2.0",
@@ -46,6 +46,19 @@ pub fn get_block_by_number(state: &mut State, block_number: &str) {
         .unwrap();
 
     let block = res.json::<Value>().unwrap()["result"].clone();
-
-    state.block_info = StatefulList::with_items(block.as_object().unwrap().iter().map(|(k, v)| (k.to_string(), v.to_string())).collect());
+    let mut ret_vec: Vec<(String, String)> = Vec::new();
+    block.as_object().unwrap().iter().for_each(|(k, v)| {
+        if k == "transactions" {
+            let transactions = v.as_array().unwrap();
+            ret_vec.push(("transactions".to_string(), "[".to_string()));
+            transactions.iter().enumerate().for_each(|(i, t)| {
+                let tx = t.as_object().unwrap().clone();
+                ret_vec.push((format!("  {}  ", i), format!("{}", tx["hash"].to_string())));
+            });
+            ret_vec.push(("0".to_string(), "]".to_string()));
+        } else {
+            ret_vec.push((k.to_string(), v.to_string()));
+        }
+    });
+    state.block_info = StatefulList::with_items(ret_vec);
 }

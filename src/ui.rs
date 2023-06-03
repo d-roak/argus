@@ -40,7 +40,7 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, app: &mut App, state: &mut State) {
     f.render_widget(tabs, chunks[0]);
     match state.tabs.index {
         0 => screens::blocks::ui::draw(f, state, chunks[1]),
-        1 => screens::transactions::ui::draw(f, app, chunks[1]),
+        1 => screens::transactions::ui::draw(f, state, chunks[1]),
         2 => screens::search::ui::draw(f, app, state, chunks[1]),
         _ => {}
     };

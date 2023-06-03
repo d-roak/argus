@@ -76,6 +76,7 @@ pub struct State<'a> {
     pub should_quit: bool,
     pub tabs: TabsState<'a>,
     pub tabs_current: u16,
+    pub tx_info: StatefulList<(String, String)>,
 }
 
 impl State<'_> {
@@ -89,6 +90,7 @@ impl State<'_> {
             should_quit: false,
             tabs: TabsState::new(vec!["Blocks", "Transactions", "Search"]),
             tabs_current: 0,
+            tx_info: StatefulList::with_items(vec![]),
         }
     }
 
