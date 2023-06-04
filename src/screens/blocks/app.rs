@@ -17,7 +17,7 @@ pub fn update_blocks_list(state: &mut State) {
         .json(&json!({
             "id": 1,
             "jsonrpc": "2.0",
-            "method": "eth_blockNumber",
+            "method": if state.rpc_selected == "Starknet" { "starknet_blockNumber" } else { "eth_blockNumber" },
         }))
         .send()
         .unwrap();
@@ -33,14 +33,21 @@ pub fn update_blocks_list(state: &mut State) {
 }
 
 pub fn get_block_by_number(state: &mut State, block_number: &str) {
-    let block_number = format!("0x{:x}", block_number.parse::<u64>().unwrap());
+    let mut params = Vec::new();
+    if state.rpc_selected == "Starknet" {
+        params.push(json!({"block_number": block_number.parse::<u64>().unwrap()}));
+    } else {
+        let block_number = format!("0x{:x}", block_number.parse::<u64>().unwrap());
+        params.push(json!(block_number));
+        params.push(json!(true));
+    }
     let res = Client::new()
         .post(&state.rpc_endpoint)
         .json(&json!({
             "id": 1,
             "jsonrpc": "2.0",
-            "method": "eth_getBlockByNumber",
-            "params": [block_number, true],
+            "method": if state.rpc_selected == "Starknet" { "starknet_getBlockWithTxHashes" } else { "eth_getBlockByNumber" },
+            "params": params
         }))
         .send()
         .unwrap();
@@ -52,8 +59,12 @@ pub fn get_block_by_number(state: &mut State, block_number: &str) {
             let transactions = v.as_array().unwrap();
             ret_vec.push(("transactions ".to_string(), "[".to_string()));
             transactions.iter().enumerate().for_each(|(i, t)| {
-                let tx = t.as_object().unwrap().clone();
-                ret_vec.push((format!("  {}  ", i), format!("{}", tx["hash"].to_string())));
+                if state.rpc_selected == "Starknet" {
+                    ret_vec.push((format!("  {}  ", i), format!("{}", t.to_string())));
+                } else {
+                    let tx = t.as_object().unwrap().clone();
+                    ret_vec.push((format!("  {}  ", i), format!("{}", tx["hash"].to_string())));
+                }
             });
             ret_vec.push(("".to_string(), "]".to_string()));
         } else {

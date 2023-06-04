@@ -16,7 +16,8 @@ pub fn get_tx_by_hash(state: &mut State, tx_hash: &str) {
         .json(&json!({
             "id": 1,
             "jsonrpc": "2.0",
-            "method": "eth_getTransactionByHash",
+            "method": if state.rpc_selected == "Starknet" { "starknet_getTransactionByHash" } else { "eth_getTransactionByHash" },
+
             "params": [tx_hash],
         }))
         .send()

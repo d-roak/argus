@@ -96,6 +96,7 @@ impl State<'_> {
             rpc_list: StatefulList::with_items(vec![
                 ("ETH_RPC_ENDPOINT".to_string(), "Ethereum".to_string()),
                 ("GNOSIS_RPC_ENDPOINT".to_string(), "Gnosis Chain".to_string()),
+                ("STARKNET_RPC_ENDPOINT".to_string(), "Starknet".to_string()),
                 ("CUSTOM_RPC_ENDPOINT".to_string(), "Custom RPC Endpoint".to_string()),
             ]),
             rpc_list_popup: false,

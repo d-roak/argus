@@ -16,11 +16,11 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
                 if rpc.0.to_string() == "CUSTOM_RPC_ENDPOINT" {
                     return;
                 }
+                state.rpc_selected = rpc.1.to_string();
                 state.rpc_endpoint = std::env::var(rpc.0.to_string()).unwrap();
                 crate::screens::blocks::app::update_blocks_list(state);
                 let block_number = state.blocks.items[state.blocks.state.selected().unwrap()].clone();
                 crate::screens::blocks::app::get_block_by_number(state, &block_number);
-                state.rpc_selected = rpc.1.to_string();
                 state.set_current_tab("Blocks");
                 state.rpc_list_popup = false;
             }
