@@ -30,6 +30,8 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
                     screens::search::keys::handle_key_event(state, key);
                 } else if state.rpc_list_popup {
                     screens::list_rpcs::keys::handle_key_event(state, key);
+                } else if state.custom_rpc_popup {
+                    screens::custom_rpc::keys::handle_key_event(state, key);
                 } else if state.tabs_current == 0 {
                     screens::blocks::keys::handle_key_event(state, key);
                 } else if state.tabs_current == 1 {
@@ -40,6 +42,8 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
         _ => {
             if state.search_popup {
                 screens::search::keys::handle_key_event(state, key);
+            } else if state.custom_rpc_popup {
+                screens::custom_rpc::keys::handle_key_event(state, key);
             }
         }
     }

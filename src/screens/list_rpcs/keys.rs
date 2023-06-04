@@ -14,6 +14,8 @@ pub fn handle_key_event(state: &mut State, key: KeyEvent) {
             KeyCode::Enter => {
                 let rpc = state.rpc_list.items[state.rpc_list.state.selected().unwrap()].clone();
                 if rpc.0.to_string() == "CUSTOM_RPC_ENDPOINT" {
+                    state.custom_rpc_popup = true;
+                    state.rpc_list_popup = false;
                     return;
                 }
                 state.rpc_selected = rpc.1.to_string();

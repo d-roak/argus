@@ -43,6 +43,9 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, state: &mut State) {
         1 => screens::transactions::ui::draw(f, state, chunks[1]),
         _ => {}
     };
+    if state.custom_rpc_popup {
+        crate::screens::custom_rpc::ui::draw(f, state);
+    }
     if state.search_popup {
         crate::screens::search::ui::draw(f, state);
     }

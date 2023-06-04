@@ -70,6 +70,7 @@ impl<T> StatefulList<T> {
 pub struct State<'a> {
     pub blocks: StatefulList<String>,
     pub block_info: StatefulList<(String, String)>,
+    pub custom_rpc_popup: bool,
     pub focus: StatefulList<String>,
     pub input_buffer: String,
     pub input_mode: InputMode,
@@ -89,6 +90,7 @@ impl State<'_> {
         Self {
             blocks: StatefulList::with_items(vec![]),
             block_info: StatefulList::with_items(vec![]),
+            custom_rpc_popup: false,
             focus: StatefulList::with_items(vec!["last_blocks".to_string(), "block_info".to_string()]),
             input_buffer: String::new(),
             input_mode: InputMode::Normal,
