@@ -1,6 +1,5 @@
-
 use crossterm::event::{KeyCode, KeyEvent};
-use crate::global_state::{InputMode, State};
+use crate::global::state::{InputMode, State};
 use crate::screens;
 
 pub fn handle_key_event(state: &mut State, key: KeyEvent) {

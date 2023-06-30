@@ -2,7 +2,7 @@
 use serde_json::{ json, Value };
 use reqwest::blocking::Client;
 
-use crate::global_state::{State, StatefulList};
+use crate::global::state::{State, StatefulList};
 
 #[derive(Debug)]
 pub struct Block {

@@ -1,4 +1,4 @@
-use crate::{app::App, ui, global_state::State, global_key_handler::handle_key_event};
+use crate::{global::ui, global::state::State, global::key_handler::handle_key_event};
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
@@ -14,7 +14,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-pub fn run(tick_rate: Duration, enhanced_graphics: bool) -> Result<(), Box<dyn Error>> {
+pub fn run(tick_rate: Duration) -> Result<(), Box<dyn Error>> {
     enable_raw_mode()?;
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
@@ -22,8 +22,7 @@ pub fn run(tick_rate: Duration, enhanced_graphics: bool) -> Result<(), Box<dyn E
     let mut terminal = Terminal::new(backend)?;
     let state = State::new();
 
-    let app = App::new("web3xplore", enhanced_graphics);
-    let res = run_app(&mut terminal, app, state, tick_rate);
+    let res = run_app(&mut terminal, state, tick_rate);
 
     disable_raw_mode()?;
     execute!(
@@ -42,7 +41,6 @@ pub fn run(tick_rate: Duration, enhanced_graphics: bool) -> Result<(), Box<dyn E
 
 fn run_app<B: Backend>(
     terminal: &mut Terminal<B>,
-    mut app: App,
     mut state: State,
     tick_rate: Duration,
 ) -> io::Result<()> {
@@ -62,7 +60,6 @@ fn run_app<B: Backend>(
             }
         }
         if last_tick.elapsed() >= tick_rate {
-            app.on_tick();
             last_tick = Instant::now();
         }
         if state.should_quit {

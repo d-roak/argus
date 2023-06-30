@@ -1,7 +1,7 @@
 
 use clipboard_macos::Clipboard;
 use crossterm::event::{KeyCode, KeyEvent};
-use crate::{global_state::State, screens::transactions::app::get_tx_by_hash};
+use crate::{global::state::State, screens::transactions::app::get_tx_by_hash};
 
 use super::app::{get_block_by_number, get_block_by_hash};
 

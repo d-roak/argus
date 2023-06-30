@@ -1,4 +1,4 @@
-use crate::global_state::State;
+use crate::global::state::State;
 use ratatui::{
     backend::Backend,
     layout::{Constraint, Layout},
@@ -53,4 +53,3 @@ pub fn draw<B: Backend>(f: &mut Frame<B>, state: &mut State) {
         crate::screens::list_rpcs::ui::draw(f, state);
     }
 }
-

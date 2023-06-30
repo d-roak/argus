@@ -102,6 +102,24 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "64cb94155d965e3d37ffbbe7cc5b82c3dd79dd33bd48e536f73d2cfb8d85506f"
 
 [[package]]
+name = "argus"
+version = "0.1.0"
+dependencies = [
+ "argh",
+ "chrono",
+ "clipboard_macos",
+ "crossterm",
+ "dotenv",
+ "hex",
+ "json",
+ "rand 0.8.5",
+ "ratatui",
+ "reqwest",
+ "serde_json",
+ "tokyo",
+]
+
+[[package]]
 name = "autocfg"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2553,24 +2571,6 @@ checksum = "3bdd9ef4e984da1187bf8110c5cf5b845fbc87a23602cdf912386a76fcd3a7c2"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "web3xplore"
-version = "0.1.0"
-dependencies = [
- "argh",
- "chrono",
- "clipboard_macos",
- "crossterm",
- "dotenv",
- "hex",
- "json",
- "rand 0.8.5",
- "ratatui",
- "reqwest",
- "serde_json",
- "tokyo",
 ]
 
 [[package]]

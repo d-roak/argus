@@ -1,4 +1,4 @@
-use crate::global_state::State;
+use crate::global::state::State;
 use ratatui::{
     backend::Backend,
     layout::{Constraint, Direction, Layout, Rect, Alignment},

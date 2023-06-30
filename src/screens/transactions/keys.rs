@@ -1,7 +1,7 @@
 
 use clipboard_macos::Clipboard;
 use crossterm::event::{KeyCode, KeyEvent};
-use crate::global_state::State;
+use crate::global::state::State;
 
 
 pub fn handle_key_event(state: &mut State, key: KeyEvent) {

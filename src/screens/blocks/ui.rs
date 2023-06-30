@@ -8,7 +8,7 @@ use ratatui::{
     },
     Frame,
 };
-use crate::global_state::State;
+use crate::global::state::State;
 
 pub fn draw<B>(f: &mut Frame<B>, state: &mut State, area: Rect)
 where

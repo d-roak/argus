@@ -1,11 +1,12 @@
-
 use ratatui::widgets::ListState;
 
+#[derive(Debug)]
 pub enum InputMode {
     Normal,
     Insert
 }
 
+#[derive(Debug)]
 pub struct TabsState<'a> {
     pub titles: Vec<&'a str>,
     pub index: usize,
@@ -23,6 +24,7 @@ impl<'a> TabsState<'a> {
     }
 }
 
+#[derive(Debug)]
 pub struct StatefulList<T> {
     pub state: ListState,
     pub items: Vec<T>,
@@ -67,6 +69,7 @@ impl<T> StatefulList<T> {
     }
 }
 
+#[derive(Debug)]
 pub struct State<'a> {
     pub blocks: StatefulList<String>,
     pub block_info: StatefulList<(String, String)>,
@@ -94,7 +97,8 @@ impl State<'_> {
             focus: StatefulList::with_items(vec!["last_blocks".to_string(), "block_info".to_string()]),
             input_buffer: String::new(),
             input_mode: InputMode::Normal,
-            rpc_endpoint: std::env::var("ETH_RPC_ENDPOINT").unwrap(),
+            //rpc_endpoint: std::env::var("ETH_RPC_ENDPOINT").unwrap(),
+            rpc_endpoint: "http://localhost:8545".to_string(),
             rpc_list: StatefulList::with_items(vec![
                 ("ETH_RPC_ENDPOINT".to_string(), "Ethereum".to_string()),
                 ("GNOSIS_RPC_ENDPOINT".to_string(), "Gnosis Chain".to_string()),
@@ -128,4 +132,3 @@ impl State<'_> {
         self.should_quit = true;
     }
 }
-
