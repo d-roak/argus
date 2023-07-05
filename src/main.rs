@@ -2,8 +2,10 @@
 extern crate dotenv;
 use dotenv::dotenv;
 
+mod components;
 mod crossterm;
 mod global;
+//mod rpcs;
 mod screens;
 
 use crate::crossterm::run;
