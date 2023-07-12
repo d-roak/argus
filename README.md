@@ -1,8 +1,8 @@
-# web3xplore
+# Argus
 
 ## Description
 
-Web3xplore is a powerful CLI tool, built with Rust, designed for blockchain developers. It allows effortless exploration of blocks and transactions on both local and remote chains. No more external website navigation for your blockchain information needs.
+Argus is a powerful CLI tool, built with Rust, designed for blockchain developers. It allows effortless exploration of blocks and transactions on both local and remote chains. No more external website navigation for your blockchain information needs.
 
 ## Features
 
@@ -20,8 +20,8 @@ You'll need Rust (v1.54.0 or later) installed on your machine. If you haven't in
 Clone the repository:
 
 ```bash
-git clone https://github.com/YourUsername/web3xplore.git
-cd web3xplore
+git clone https://github.com/ziku/argus.git
+cd argus
 ```
 
 Build the project:
@@ -35,7 +35,7 @@ This will create an executable in the `./target/release/` directory.
 ## Usage
 
 ```bash
-./target/release/web3xplore
+./target/release/argus
 ```
 
 ## Troubleshooting
@@ -44,6 +44,6 @@ If you encounter any issues, feel free to open a new issue in our GitHub reposit
 
 ## License
 
-Web3xplore is released under the MIT License. See our `LICENSE` file for more details.
+Argus is released under the MIT License. See our `LICENSE` file for more details.
 
 Together, let's redefine the way we explore blockchain. Happy coding!

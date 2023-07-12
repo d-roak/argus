@@ -1,4 +1,3 @@
-
 use serde_json::{ json, Value };
 use reqwest::blocking::Client;
 
@@ -27,7 +26,7 @@ pub fn update_blocks_list(state: &mut State) {
     }
 
     let last_block: String = res.json::<Value>().unwrap()["result"].to_string().replace("\"", "");
-    let last_block: i64 = i64::from_str_radix(&last_block[2..], 16).unwrap();
+    let last_block: i64 = last_block.parse::<i64>().unwrap_or(i64::from_str_radix(&last_block[2..], 16).unwrap());
 
     state.blocks = StatefulList::with_items((std::cmp::max(last_block-1000,0)..last_block).rev().map(|i| i.to_string()).collect());
 }
