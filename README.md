@@ -17,13 +17,6 @@ You'll need Rust (v1.54.0 or later) installed on your machine. If you haven't in
 
 ## Installation
 
-Clone the repository:
-
-```bash
-git clone https://github.com/ziku/argus.git
-cd argus
-```
-
 Build the project:
 
 ```bash
